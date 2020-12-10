@@ -12,10 +12,6 @@ const numbers = new Set();
 let result = -1;
 data.split('\n').findIndex((entry) => {
   const number = parseInt(entry);
-  if (isNaN(number)) {
-    return false;
-  }
-
   numbers.add(number);
 
   for (let n of numbers) {

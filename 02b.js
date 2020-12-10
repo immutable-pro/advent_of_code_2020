@@ -20,7 +20,6 @@ const fs = require('fs');
 const data = fs.readFileSync('./02.txt', 'utf-8');
 
 const reducer = (prev, line) => {
-  if (line === '') return prev;
   const [minMax, letterColon, string] = line.split(' ');
   const [min, max] = minMax.split('-');
   const [letter] = letterColon.split(':');

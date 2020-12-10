@@ -21,10 +21,6 @@ const entries = new Set();
 let result = -1;
 data.split('\n').findIndex((entry) => {
   const number = parseInt(entry);
-  if (isNaN(number)) {
-    return false;
-  }
-
   const complement = 2020 - number;
   entries.add(number);
 
