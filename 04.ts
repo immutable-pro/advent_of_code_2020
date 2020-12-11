@@ -51,33 +51,19 @@ import fs from 'fs';
 const data = fs.readFileSync('./04.txt', 'utf-8');
 const lines = data.split('\n');
 
-const required = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid' /*'cid'*/];
+const required = /(?=.*byr:)(?=.*iyr:)(?=.*eyr:)(?=.*hgt:)(?=.*hcl:)(?=.*ecl:)(?=.*pid:)/;
 
-const validate = (info: string) => {
-  const fields = info.split(' ');
-
-  const found = new Set();
-  fields.forEach((field) => {
-    found.add(field.split(':')[0]);
-  });
-
-  for (let requiredField of required) {
-    if (!found.has(requiredField)) {
-      return false;
-    }
-  }
-
-  return true;
-};
+const validate = (info: string) => required.test(info);
 
 let passportInfo = '';
-let count = 0;
-lines.forEach((line) => {
+const result = lines.reduce<number>((count: number, line: string) => {
   if (line === '') {
-    count += validate(passportInfo) ? 1 : 0;
+    count += validate(passportInfo.trim()) ? 1 : 0;
+    passportInfo = '';
   } else {
     passportInfo = `${passportInfo} ${line}`;
   }
-});
+  return count;
+}, 0);
 
-console.log(count);
+console.log(result);
