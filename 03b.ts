@@ -17,7 +17,7 @@ What do you get if you multiply together the number of trees encountered on each
 
 */
 
-const fs = require('fs');
+import fs from 'fs';
 const data = fs.readFileSync('./03.txt', 'utf-8');
 
 const lines = data.split('\n');
@@ -26,7 +26,7 @@ const length = lines[0].length;
 const downSteps = [1, 1, 1, 1, 2];
 const rightSteps = [1, 3, 5, 7, 1];
 
-const reducer = (prev, line) => {
+const reducer = (prev: { lineNum: number; trees: any[] }, line: string) => {
   if (prev.lineNum === 0) {
     ++prev.lineNum;
     return prev;

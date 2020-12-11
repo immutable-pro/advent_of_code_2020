@@ -14,12 +14,12 @@ In this list, the two entries that sum to 2020 are 1721 and 299. Multiplying the
 
 Of course, your expense report is much larger. Find the two entries that sum to 2020; what do you get if you multiply them together?
 */
-const fs = require('fs');
+import fs from 'fs';
 const data = fs.readFileSync('./01.txt', 'utf-8');
 
 const entries = new Set();
 let result = -1;
-data.split('\n').findIndex((entry) => {
+data.split('\n').findIndex((entry: string) => {
   const number = parseInt(entry);
   const complement = 2020 - number;
   entries.add(number);

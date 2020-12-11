@@ -22,10 +22,10 @@ In the above example, 2 passwords are valid. The middle password, cdefg, is not;
 How many passwords are valid according to their policies?
 */
 
-const fs = require('fs');
+import fs from 'fs';
 const data = fs.readFileSync('./02.txt', 'utf-8');
 
-const reducer = (prev, line) => {
+const reducer = (prev: number, line: string) => {
   const [minMax, letterColon, string] = line.split(' ');
   const [min, max] = minMax.split('-');
   const [letter] = letterColon.split(':');

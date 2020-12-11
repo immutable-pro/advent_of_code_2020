@@ -56,13 +56,13 @@ In this example, traversing the map using this slope would cause you to encounte
 Starting at the top-left corner of your map and following a slope of right 3 and down 1, how many trees would you encounter?
 */
 
-const fs = require('fs');
+import fs from 'fs';
 const data = fs.readFileSync('./03.txt', 'utf-8');
 
 const lines = data.split('\n');
 const length = lines[0].length;
 
-const reducer = (prev, line) => {
+const reducer = (prev: { lineNum: number; trees: number }, line: string) => {
   if (prev.lineNum === 0) {
     ++prev.lineNum;
     return prev;

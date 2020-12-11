@@ -7,10 +7,10 @@
 const fs = require('fs');
 const data = fs.readFileSync('./01.txt', 'utf-8');
 
-const numbers = new Set();
+const numbers = new Set<number>();
 
 let result = -1;
-data.split('\n').findIndex((entry) => {
+data.split('\n').findIndex((entry: string) => {
   const number = parseInt(entry);
   numbers.add(number);
 
