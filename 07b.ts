@@ -73,7 +73,7 @@ const stack: {
 let total = 0;
 while (stack.length) {
   const rule = stack.pop();
-  if (!rule || !rule.bags) continue;
+  if (!rule?.bags) continue;
 
   rule.bags.forEach(({ count, name }) => {
     total += rule.multiplier * count;
