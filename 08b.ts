@@ -107,7 +107,12 @@ while (true) {
     }
     alreadyChanged[pointer] = pointer;
   } else {
-    console.log(acc);
+    console.log(
+      `You changed: ${
+        alreadyChanged.filter((p) => p !== undefined).length
+      } instructions.`
+    );
+    console.log(`Accumulator: ${acc}`);
     break;
   }
 }
