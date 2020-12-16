@@ -63,28 +63,34 @@ const lines = data
   .map((line) => parseInt(line))
   .sort((a, b) => a - b);
 
+// Max 80: this could be improved by eliminating the 80 limit
+const sequence = [0, 1, 2, 4, 7, 13, 24];
+for (let i = 7; i < 80; i++) {
+  const newElem = sequence[i - 1] + sequence[i - 2] + sequence[i - 3];
+  sequence.push(newElem);
+}
+function tribonacci(i: number) {
+  if (i >= 80) {
+    throw 'We are not that smart just jet!';
+  }
+  return sequence[i];
+}
+
+lines.push(lines[lines.length - 1] + 3);
+console.log(lines);
+
 // Cheated!!!
 function calculateArrangements(joltages: number[]) {
-  //How many different ways can you arrange the adapters to get from zero jolts to 169?
   let arrangements = 1;
 
-  joltages.push(joltages[joltages.length - 1] + 3);
-
-  // This could be totally improved
-  const tribonacci = [0, 1, 2, 4, 7, 13, 24];
-  for (let i = 7; i < 80; i++) {
-    const newElem = tribonacci[i - 1] + tribonacci[i - 2] + tribonacci[i - 3];
-    tribonacci.push(newElem);
-  }
-
-  var oneJoltDifferences = 0;
+  let oneJoltDifferences = 0;
   for (let i = 0; i < joltages.length; i++) {
     var diff = i === 0 ? joltages[i] - 0 : joltages[i] - joltages[i - 1];
     if (diff == 1) {
       oneJoltDifferences++;
     } else {
       if (oneJoltDifferences > 0) {
-        arrangements *= tribonacci[oneJoltDifferences];
+        arrangements *= tribonacci(oneJoltDifferences);
         oneJoltDifferences = 0;
       }
     }
@@ -93,3 +99,6 @@ function calculateArrangements(joltages: number[]) {
 }
 
 console.log(calculateArrangements(lines));
+console.log(calculateArrangements([0, 1, 4]));
+console.log(calculateArrangements([1, 4, 5]));
+console.log(calculateArrangements([0, 1, 4, 5, 6]));
