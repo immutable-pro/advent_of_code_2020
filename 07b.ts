@@ -37,48 +37,51 @@ const target = 'shiny gold';
 const graph = new Map<string, Set<{ count: number; name: string }>>();
 
 data.split('\n').forEach((line) => {
-  const [container, contained] = line
-    .replace(/,|\.|bag(s)?[\s,\.]\s?/g, '')
-    .split('contain');
+    const [container, contained] = line
+        .replace(/,|\.|bag(s)?[\s,.]\s?/g, '')
+        .split('contain');
 
-  const containedBags = new Set<{ count: number; name: string }>();
-  let bag: string = '';
-  let count: number = 0;
-  contained
-    .trim()
-    .split(' ')
-    .forEach((token) => {
-      const n = parseInt(token);
-      if (!isNaN(n)) {
-        if (bag !== '') {
-          containedBags.add({ count, name: bag.trim() });
-          bag = '';
-        }
-        count = n;
-      } else {
-        bag = `${bag} ${token}`;
-      }
-    });
+    const containedBags = new Set<{ count: number; name: string }>();
+    let bag = '';
+    let count = 0;
+    contained
+        .trim()
+        .split(' ')
+        .forEach((token) => {
+            const n = parseInt(token);
+            if (!isNaN(n)) {
+                if (bag !== '') {
+                    containedBags.add({ count, name: bag.trim() });
+                    bag = '';
+                }
+                count = n;
+            } else {
+                bag = `${bag} ${token}`;
+            }
+        });
 
-  containedBags.add({ count, name: bag.trim() });
+    containedBags.add({ count, name: bag.trim() });
 
-  graph.set(container.trim(), containedBags);
+    graph.set(container.trim(), containedBags);
 });
 
 const stack: {
-  multiplier: number;
-  bags?: Set<{ count: number; name: string }>;
+    multiplier: number;
+    bags?: Set<{ count: number; name: string }>;
 }[] = [{ multiplier: 1, bags: graph.get(target) }];
 
 let total = 0;
 while (stack.length) {
-  const rule = stack.pop();
-  if (!rule?.bags) continue;
+    const rule = stack.pop();
+    if (!rule?.bags) continue;
 
-  rule.bags.forEach(({ count, name }) => {
-    total += rule.multiplier * count;
-    stack.push({ multiplier: rule.multiplier * count, bags: graph.get(name) });
-  });
+    rule.bags.forEach(({ count, name }) => {
+        total += rule.multiplier * count;
+        stack.push({
+            multiplier: rule.multiplier * count,
+            bags: graph.get(name),
+        });
+    });
 }
 
 console.log(total);

@@ -40,32 +40,32 @@ const data = fs.readFileSync('./09.txt', 'utf-8');
 const lines = Object.freeze(data.split('\n').map((line) => parseInt(line)));
 
 const findMinMax = (
-  s: number,
-  e: number,
-  lines: readonly number[]
+    s: number,
+    e: number,
+    lines: readonly number[]
 ): [number, number] => {
-  const sorted = lines.slice(s, e + 1).sort((a, b) => a - b);
-  return [sorted[0], sorted[sorted.length - 1]];
+    const sorted = lines.slice(s, e + 1).sort((a, b) => a - b);
+    return [sorted[0], sorted[sorted.length - 1]];
 };
 
 const findWeakness = (lines: readonly number[], invalidNumber: number) => {
-  for (let i = 0; i < lines.length; ) {
-    let sum = lines[i];
+    for (let i = 0; i < lines.length; ) {
+        let sum = lines[i];
 
-    for (let j = i + 1; j < lines.length; ) {
-      let jValue = lines[j];
-      if (sum + jValue > invalidNumber) {
-        sum -= lines[i];
-        i++;
-      } else if (sum + jValue < invalidNumber) {
-        sum += jValue;
-        j++;
-      } else {
-        const [min, max] = findMinMax(i, j, lines);
-        return `Min: ${min}, Max: ${max}, Sum: ${min + max}`;
-      }
+        for (let j = i + 1; j < lines.length; ) {
+            const jValue = lines[j];
+            if (sum + jValue > invalidNumber) {
+                sum -= lines[i];
+                i++;
+            } else if (sum + jValue < invalidNumber) {
+                sum += jValue;
+                j++;
+            } else {
+                const [min, max] = findMinMax(i, j, lines);
+                return `Min: ${min}, Max: ${max}, Sum: ${min + max}`;
+            }
+        }
     }
-  }
 };
 
 console.log(findWeakness(lines, findInvalid(lines, 25) ?? 0));

@@ -52,36 +52,36 @@ const LeftRotation: Towards[] = ['E', 'N', 'W', 'S'];
 const RightRotation: Towards[] = ['E', 'S', 'W', 'N'];
 
 const turn = (towards: Towards, direction: Turn, value: number) => {
-  const turns = value / 90;
-  const rotation = direction === 'L' ? LeftRotation : RightRotation;
-  const steps =
+    const turns = value / 90;
+    const rotation = direction === 'L' ? LeftRotation : RightRotation;
+    const steps =
     (rotation.findIndex((v) => v === towards) + turns) % rotation.length;
-  return rotation[steps];
+    return rotation[steps];
 };
 
 const forward = (
-  towards: Towards,
-  value: number,
-  lat: number,
-  lon: number
+    towards: Towards,
+    value: number,
+    lat: number,
+    lon: number
 ): [number, number] => {
-  let newLat = lat,
-    newLon = lon;
-  switch (towards) {
-    case 'E':
-      newLon += value;
-      break;
-    case 'W':
-      newLon -= value;
-      break;
-    case 'N':
-      newLat += value;
-      break;
-    case 'S':
-      newLat -= value;
-      break;
-  }
-  return [newLat, newLon];
+    let newLat = lat,
+        newLon = lon;
+    switch (towards) {
+        case 'E':
+            newLon += value;
+            break;
+        case 'W':
+            newLon -= value;
+            break;
+        case 'N':
+            newLat += value;
+            break;
+        case 'S':
+            newLat -= value;
+            break;
+    }
+    return [newLat, newLon];
 };
 
 let latitude = 0; // S/N
@@ -89,29 +89,29 @@ let longitude = 0; // E/W
 let towards: Towards = 'E'; // Initial
 
 actions.forEach((actionValue) => {
-  const [, action, valueStr] = (actionRegex.exec(actionValue) as unknown) as [
+    const [, action, valueStr] = (actionRegex.exec(actionValue) as unknown) as [
     unknown,
     Action,
     string
   ];
 
-  const value = parseInt(valueStr);
+    const value = parseInt(valueStr);
 
-  switch (action) {
-    case 'L':
-      towards = turn(towards, 'L', value);
-      break;
-    case 'R':
-      towards = turn(towards, 'R', value);
-      break;
-    case 'F':
-      [latitude, longitude] = forward(towards, value, latitude, longitude);
-      break;
-    default:
-      // E W N S
-      [latitude, longitude] = forward(action, value, latitude, longitude);
-      break;
-  }
+    switch (action) {
+        case 'L':
+            towards = turn(towards, 'L', value);
+            break;
+        case 'R':
+            towards = turn(towards, 'R', value);
+            break;
+        case 'F':
+            [latitude, longitude] = forward(towards, value, latitude, longitude);
+            break;
+        default:
+        // E W N S
+            [latitude, longitude] = forward(action, value, latitude, longitude);
+            break;
+    }
 });
 
 console.log(Math.abs(latitude) + Math.abs(longitude));

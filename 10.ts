@@ -89,25 +89,25 @@ Find a chain that uses all of your adapters to connect the charging outlet to yo
 import fs from 'fs';
 const data = fs.readFileSync('./10.txt', 'utf-8');
 const lines = Object.freeze(
-  data
-    .split('\n')
-    .map((line) => parseInt(line))
-    .sort((a, b) => a - b)
+    data
+        .split('\n')
+        .map((line) => parseInt(line))
+        .sort((a, b) => a - b)
 );
 
 let prevJoltage = 0,
-  ones = 0,
-  threes = 1;
+    ones = 0,
+    threes = 1;
 lines.forEach((joltage) => {
-  const diff = joltage - prevJoltage;
-  if (diff <= 3) {
-    if (diff === 3) {
-      threes++;
-    } else if (diff === 1) {
-      ones++;
+    const diff = joltage - prevJoltage;
+    if (diff <= 3) {
+        if (diff === 3) {
+            threes++;
+        } else if (diff === 1) {
+            ones++;
+        }
+        prevJoltage = joltage;
     }
-    prevJoltage = joltage;
-  }
 });
 
 console.log(threes * ones);

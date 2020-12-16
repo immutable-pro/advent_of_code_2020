@@ -20,16 +20,16 @@ const data = fs.readFileSync('./01.txt', 'utf-8');
 const entries = new Set();
 let result = -1;
 data.split('\n').findIndex((entry: string) => {
-  const number = parseInt(entry);
-  const complement = 2020 - number;
-  entries.add(number);
+    const number = parseInt(entry);
+    const complement = 2020 - number;
+    entries.add(number);
 
-  if (entries.has(complement)) {
-    result = number * complement;
-    return true;
-  }
+    if (entries.has(complement)) {
+        result = number * complement;
+        return true;
+    }
 
-  return false;
+    return false;
 });
 
 console.log(result);

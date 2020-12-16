@@ -63,17 +63,17 @@ const lines = data.split('\n');
 const length = lines[0].length;
 
 const reducer = (prev: { lineNum: number; trees: number }, line: string) => {
-  if (prev.lineNum === 0) {
-    ++prev.lineNum;
-    return prev;
-  }
+    if (prev.lineNum === 0) {
+        ++prev.lineNum;
+        return prev;
+    }
 
-  const pos = (prev.lineNum * 3) % length;
-  prev.trees = line[pos] === '#' ? ++prev.trees : prev.trees;
-  prev.lineNum++;
-  return prev;
+    const pos = (prev.lineNum * 3) % length;
+    prev.trees = line[pos] === '#' ? ++prev.trees : prev.trees;
+    prev.lineNum++;
+    return prev;
 };
 
 console.log(
-  `Trees: ${JSON.stringify(lines.reduce(reducer, { lineNum: 0, trees: 0 }))}`
+    `Trees: ${JSON.stringify(lines.reduce(reducer, { lineNum: 0, trees: 0 }))}`
 );

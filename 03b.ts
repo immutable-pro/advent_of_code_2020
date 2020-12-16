@@ -26,26 +26,26 @@ const length = lines[0].length;
 const downSteps = [1, 1, 1, 1, 2];
 const rightSteps = [1, 3, 5, 7, 1];
 
-const reducer = (prev: { lineNum: number; trees: any[] }, line: string) => {
-  if (prev.lineNum === 0) {
-    ++prev.lineNum;
-    return prev;
-  }
-
-  for (let d = 0; d < downSteps.length; d++) {
-    const down = downSteps[d];
-    if (prev.lineNum % down > 0) {
-      continue;
+const reducer = (prev: { lineNum: number; trees: number[] }, line: string) => {
+    if (prev.lineNum === 0) {
+        ++prev.lineNum;
+        return prev;
     }
 
-    const right = rightSteps[d];
-    const pos = ((prev.lineNum / down) * right) % length;
-    prev.trees[d] = line[pos] === '#' ? ++prev.trees[d] : prev.trees[d];
-  }
+    for (let d = 0; d < downSteps.length; d++) {
+        const down = downSteps[d];
+        if (prev.lineNum % down > 0) {
+            continue;
+        }
 
-  prev.lineNum++;
+        const right = rightSteps[d];
+        const pos = ((prev.lineNum / down) * right) % length;
+        prev.trees[d] = line[pos] === '#' ? ++prev.trees[d] : prev.trees[d];
+    }
 
-  return prev;
+    prev.lineNum++;
+
+    return prev;
 };
 
 const result = lines.reduce(reducer, { lineNum: 0, trees: [0, 0, 0, 0, 0] });

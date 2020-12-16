@@ -56,33 +56,33 @@ const data = fs.readFileSync('./09.txt', 'utf-8');
 const lines = Object.freeze(data.split('\n').map((line) => parseInt(line)));
 
 export const findInvalid = (
-  lines: readonly number[],
-  windowSize: number
+    lines: readonly number[],
+    windowSize: number
 ): number | undefined => {
-  let start = 0;
-  let end = windowSize;
+    const start = 0;
+    const end = windowSize;
 
-  const window = new Set<number>(lines.slice(start, end));
-  for (let i = windowSize; i < lines.length; i++) {
-    const target = lines[i];
+    const window = new Set<number>(lines.slice(start, end));
+    for (let i = windowSize; i < lines.length; i++) {
+        const target = lines[i];
 
-    let found = false;
-    for (let n of window) {
-      if (window.has(target - n)) {
-        found = true;
-        break;
-      }
+        let found = false;
+        for (const n of window) {
+            if (window.has(target - n)) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            return target;
+        }
+
+        window.delete(lines[windowSize - i]);
+        window.add(target);
     }
 
-    if (!found) {
-      return target;
-    }
-
-    window.delete(lines[windowSize - i]);
-    window.add(target);
-  }
-
-  return undefined;
+    return undefined;
 };
 
 console.log(findInvalid(lines, 25));

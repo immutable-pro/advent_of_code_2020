@@ -59,21 +59,21 @@ What is the total number of distinct ways you can arrange the adapters to connec
 import fs from 'fs';
 const data = fs.readFileSync('./10.txt', 'utf-8');
 const lines = data
-  .split('\n')
-  .map((line) => parseInt(line))
-  .sort((a, b) => a - b);
+    .split('\n')
+    .map((line) => parseInt(line))
+    .sort((a, b) => a - b);
 
 // Max 80: this could be improved by eliminating the 80 limit
 const sequence = [0, 1, 2, 4, 7, 13, 24];
 for (let i = 7; i < 80; i++) {
-  const newElem = sequence[i - 1] + sequence[i - 2] + sequence[i - 3];
-  sequence.push(newElem);
+    const newElem = sequence[i - 1] + sequence[i - 2] + sequence[i - 3];
+    sequence.push(newElem);
 }
 function tribonacci(i: number) {
-  if (i >= 80) {
-    throw 'We are not that smart just jet!';
-  }
-  return sequence[i];
+    if (i >= 80) {
+        throw 'We are not that smart just jet!';
+    }
+    return sequence[i];
 }
 
 lines.push(lines[lines.length - 1] + 3);
@@ -81,21 +81,21 @@ console.log(lines);
 
 // Cheated!!!
 function calculateArrangements(joltages: number[]) {
-  let arrangements = 1;
+    let arrangements = 1;
 
-  let oneJoltDifferences = 0;
-  for (let i = 0; i < joltages.length; i++) {
-    var diff = i === 0 ? joltages[i] - 0 : joltages[i] - joltages[i - 1];
-    if (diff == 1) {
-      oneJoltDifferences++;
-    } else {
-      if (oneJoltDifferences > 0) {
-        arrangements *= tribonacci(oneJoltDifferences);
-        oneJoltDifferences = 0;
-      }
+    let oneJoltDifferences = 0;
+    for (let i = 0; i < joltages.length; i++) {
+        const diff = i === 0 ? joltages[i] - 0 : joltages[i] - joltages[i - 1];
+        if (diff == 1) {
+            oneJoltDifferences++;
+        } else {
+            if (oneJoltDifferences > 0) {
+                arrangements *= tribonacci(oneJoltDifferences);
+                oneJoltDifferences = 0;
+            }
+        }
     }
-  }
-  return arrangements;
+    return arrangements;
 }
 
 console.log(calculateArrangements(lines));

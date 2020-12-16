@@ -37,103 +37,103 @@ type Turn = 'L' | 'R';
 type Towards = 'E' | 'S' | 'W' | 'N';
 type Action = Towards | Turn | 'F';
 interface Location {
-  lat: number;
-  lon: number;
+    lat: number;
+    lon: number;
 }
 
 const actionRegex = /^([ESWNLRF])([0-9]+)$/;
 
 const rotate = (
-  direction: Turn,
-  value: number,
-  location: Location
+    direction: Turn,
+    value: number,
+    location: Location
 ): Location => {
-  const newLoc = { lat: 0, lon: 0 };
-  let prevLoc = { ...location };
-  let turns = value / 90;
-  if (direction === 'R') {
-    while (turns > 0) {
-      newLoc.lon = prevLoc.lat;
-      newLoc.lat = prevLoc.lon * -1;
-      prevLoc = { ...newLoc };
-      turns--;
+    const newLoc = { lat: 0, lon: 0 };
+    let prevLoc = { ...location };
+    let turns = value / 90;
+    if (direction === 'R') {
+        while (turns > 0) {
+            newLoc.lon = prevLoc.lat;
+            newLoc.lat = prevLoc.lon * -1;
+            prevLoc = { ...newLoc };
+            turns--;
+        }
+    } else {
+        while (turns > 0) {
+            newLoc.lon = prevLoc.lat * -1;
+            newLoc.lat = prevLoc.lon;
+            prevLoc = { ...newLoc };
+            turns--;
+        }
     }
-  } else {
-    while (turns > 0) {
-      newLoc.lon = prevLoc.lat * -1;
-      newLoc.lat = prevLoc.lon;
-      prevLoc = { ...newLoc };
-      turns--;
-    }
-  }
 
-  return newLoc;
+    return newLoc;
 };
 
 const forward = (
-  towards: Towards,
-  value: number,
-  location: Location
+    towards: Towards,
+    value: number,
+    location: Location
 ): Location => {
-  const newLocation = { ...location };
-  switch (towards) {
-    case 'E':
-      newLocation.lon += value;
-      break;
-    case 'W':
-      newLocation.lon -= value;
-      break;
-    case 'N':
-      newLocation.lat += value;
-      break;
-    case 'S':
-      newLocation.lat -= value;
-      break;
-  }
-  return newLocation;
+    const newLocation = { ...location };
+    switch (towards) {
+        case 'E':
+            newLocation.lon += value;
+            break;
+        case 'W':
+            newLocation.lon -= value;
+            break;
+        case 'N':
+            newLocation.lat += value;
+            break;
+        case 'S':
+            newLocation.lat -= value;
+            break;
+    }
+    return newLocation;
 };
 
-let ferry: Location = {
-  lat: 0,
-  lon: 0,
+const ferry: Location = {
+    lat: 0,
+    lon: 0,
 };
 
 let waypoint: Location = {
-  lat: 1,
-  lon: 10,
+    lat: 1,
+    lon: 10,
 };
 
 actions.forEach((actionValue) => {
-  const [, action, valueStr] = (actionRegex.exec(actionValue) as unknown) as [
-    unknown,
-    Action,
-    string
-  ];
+    const [, action, valueStr] = (actionRegex.exec(actionValue) as unknown) as [
+        unknown,
+        Action,
+        string
+    ];
 
-  const value = parseInt(valueStr);
+    const value = parseInt(valueStr);
 
-  switch (action) {
-    case 'L':
-      waypoint = rotate('L', value, waypoint);
-      break;
-    case 'R':
-      waypoint = rotate('R', value, waypoint);
-      break;
-    case 'F':
-      ferry.lon = ferry.lon + value * waypoint.lon;
-      ferry.lat = ferry.lat + value * waypoint.lat;
-      break;
-    default:
-      // E W N S
-      waypoint = forward(action, value, waypoint);
-      break;
-  }
+    switch (action) {
+        case 'L':
+            waypoint = rotate('L', value, waypoint);
+            break;
+        case 'R':
+            waypoint = rotate('R', value, waypoint);
+            break;
+        case 'F':
+            ferry.lon = ferry.lon + value * waypoint.lon;
+            ferry.lat = ferry.lat + value * waypoint.lat;
+            break;
+        default:
+        // E W N S
+            waypoint = forward(action, value, waypoint);
+            break;
+    }
 
-  //   console.log(
-  //     `${actionValue}: Ferry: ${JSON.stringify(
-  //       ferry
-  //     )}; Waypoint: ${JSON.stringify(waypoint)}`
-  //   );
+    //   console.log(
+    //     `${actionValue}: Ferry: ${JSON.stringify(
+    //       ferry
+    //     )}; Waypoint: ${JSON.stringify(waypoint)}`
+    //   );
 });
 
 console.log(Math.abs(ferry.lon) + Math.abs(ferry.lat));

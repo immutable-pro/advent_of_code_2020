@@ -45,74 +45,74 @@ const data = fs.readFileSync('./08.txt', 'utf-8');
 type Op = 'nop' | 'acc' | 'jmp';
 
 const parseOp = (line: string): [Op, number] => {
-  const [op, value] = line.split(' ') as [Op, string];
-  return [op, parseInt(value)];
+    const [op, value] = line.split(' ') as [Op, string];
+    return [op, parseInt(value)];
 };
 const OPS = Object.freeze(data.split('\n'));
 
 function executeProgram(
-  ops: string[],
-  nopsJmpsStack: number[]
+    ops: string[],
+    nopsJmpsStack: number[]
 ): [boolean, number] {
-  const executed: number[] = [];
-  let pointer = 0;
-  let acc = 0;
+    const executed: number[] = [];
+    let pointer = 0;
+    let acc = 0;
 
-  for (pointer = 0; pointer < ops.length; ) {
-    if (executed[pointer] !== undefined) {
-      return [false, acc];
-    }
-    executed[pointer] = pointer;
-
-    const [op, value] = parseOp(ops[pointer]);
-    // console.log(`${op}\t${value}\t| acc: ${acc}`);
-
-    switch (op) {
-      case 'acc':
-        acc += value;
-        pointer++;
-        break;
-      case 'jmp':
-        if (alreadyChanged[pointer] === undefined) {
-          nopsJmpsStack.push(pointer);
+    for (pointer = 0; pointer < ops.length; ) {
+        if (executed[pointer] !== undefined) {
+            return [false, acc];
         }
-        pointer += value;
-        break;
-      case 'nop':
-        if (alreadyChanged[pointer] === undefined) {
-          nopsJmpsStack.push(pointer);
-        }
-        pointer++;
-        break;
-    }
-  }
+        executed[pointer] = pointer;
 
-  return [pointer === ops.length, acc];
+        const [op, value] = parseOp(ops[pointer]);
+        // console.log(`${op}\t${value}\t| acc: ${acc}`);
+
+        switch (op) {
+            case 'acc':
+                acc += value;
+                pointer++;
+                break;
+            case 'jmp':
+                if (alreadyChanged[pointer] === undefined) {
+                    nopsJmpsStack.push(pointer);
+                }
+                pointer += value;
+                break;
+            case 'nop':
+                if (alreadyChanged[pointer] === undefined) {
+                    nopsJmpsStack.push(pointer);
+                }
+                pointer++;
+                break;
+        }
+    }
+
+    return [pointer === ops.length, acc];
 }
 
 let ops = [...OPS];
 const nopsJmpsStack: number[] = [];
 const alreadyChanged: number[] = [];
+// eslint-disable-next-line no-constant-condition
 while (true) {
-  //   console.log('=====================================');
-  const [done, acc] = executeProgram(ops, nopsJmpsStack);
-  if (!done) {
-    const pointer = nopsJmpsStack.pop()!;
-    ops = [...OPS];
-    const [op, value] = parseOp(ops[pointer]);
-    if (op === 'jmp') {
-      ops[pointer] = `nop ${value}`;
-    } else if (op === 'nop') {
-      ops[pointer] = `jmp ${value}`;
+    const [done, acc] = executeProgram(ops, nopsJmpsStack);
+    if (!done) {
+        const pointer = nopsJmpsStack.pop() ?? 0;
+        ops = [...OPS];
+        const [op, value] = parseOp(ops[pointer]);
+        if (op === 'jmp') {
+            ops[pointer] = `nop ${value}`;
+        } else if (op === 'nop') {
+            ops[pointer] = `jmp ${value}`;
+        }
+        alreadyChanged[pointer] = pointer;
+    } else {
+        console.log(
+            `You changed: ${
+                alreadyChanged.filter((p) => p !== undefined).length
+            } instructions.`
+        );
+        console.log(`Accumulator: ${acc}`);
+        break;
     }
-    alreadyChanged[pointer] = pointer;
-  } else {
-    console.log(
-      `You changed: ${
-        alreadyChanged.filter((p) => p !== undefined).length
-      } instructions.`
-    );
-    console.log(`Accumulator: ${acc}`);
-    break;
-  }
 }

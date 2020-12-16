@@ -104,108 +104,112 @@ const free = 0;
 const occupied = 1;
 
 const initialSeats: SeatingPlan = data
-  .split('\n')
-  .map((row) => row.split('').map((seat) => (seat === '.' ? floor : occupied)));
+    .split('\n')
+    .map((row) =>
+        row.split('').map((seat) => (seat === '.' ? floor : occupied))
+    );
 
 const adjacentPositions = Object.freeze([
-  [-1, -1],
-  [-1, 0],
-  [-1, 1],
-  [0, -1],
-  [0, 1],
-  [1, -1],
-  [1, 0],
-  [1, 1],
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
 ]);
 
-const logSeats = (seatingPlan: SeatingPlan) => {
-  seatingPlan.forEach((row) =>
-    console.log(
-      row.reduce<string>((prev, state) => {
-        switch (state) {
-          case occupied:
-            return `${prev}#`;
-          case free:
-            return `${prev}L`;
-          case floor:
-            return `${prev}.`;
-        }
-      }, '')
-    )
-  );
-  console.log('==================');
+export const logSeats = (seatingPlan: SeatingPlan): void => {
+    seatingPlan.forEach((row) =>
+        console.log(
+            row.reduce<string>((prev, state) => {
+                switch (state) {
+                    case occupied:
+                        return `${prev}#`;
+                    case free:
+                        return `${prev}L`;
+                    case floor:
+                        return `${prev}.`;
+                }
+            }, '')
+        )
+    );
+    console.log('==================');
 };
 
 const areAdjacentSeatsBusy = (seatingPlan: SeatingPlan, r: number, c: number) =>
-  adjacentPositions.find(
-    ([x, y]) => seatingPlan[r + x] && seatingPlan[r + x][c + y] === occupied
-  ) !== undefined;
+    adjacentPositions.find(
+        ([x, y]) => seatingPlan[r + x] && seatingPlan[r + x][c + y] === occupied
+    ) !== undefined;
 
 const areAtLeast4AdjacentSeatsBusy = (
-  seatingPlan: SeatingPlan,
-  r: number,
-  c: number
+    seatingPlan: SeatingPlan,
+    r: number,
+    c: number
 ) => {
-  let count = 0;
-  for (let [x, y] of adjacentPositions) {
-    if (count === 4) break;
-    if (seatingPlan[r + x] && seatingPlan[r + x][c + y] === occupied) {
-      count++;
+    let count = 0;
+    for (const [x, y] of adjacentPositions) {
+        if (count === 4) break;
+        if (seatingPlan[r + x] && seatingPlan[r + x][c + y] === occupied) {
+            count++;
+        }
     }
-  }
-  return count === 4;
+    return count === 4;
 };
 
 const changeYourMind = (seatingPlan: SeatingPlan): [number, SeatingPlan] => {
-  let changes = 0;
-  const newSeatingPlan = seatingPlan.map((row, r) =>
-    row.map((seatState, c) => {
-      if (
-        seatState === occupied &&
-        areAtLeast4AdjacentSeatsBusy(seatingPlan, r, c)
-      ) {
-        changes++;
-        return free;
-      }
-      return seatState;
-    })
-  );
+    let changes = 0;
+    const newSeatingPlan = seatingPlan.map((row, r) =>
+        row.map((seatState, c) => {
+            if (
+                seatState === occupied &&
+                areAtLeast4AdjacentSeatsBusy(seatingPlan, r, c)
+            ) {
+                changes++;
+                return free;
+            }
+            return seatState;
+        })
+    );
 
-  return [changes, newSeatingPlan];
+    return [changes, newSeatingPlan];
 };
 
 const occupySeats = (seatingPlan: SeatingPlan): [number, SeatingPlan] => {
-  let changes = 0;
-  const newSeatingPlan = seatingPlan.map((row, r) =>
-    row.map((seatState, c) => {
-      if (seatState === free && !areAdjacentSeatsBusy(seatingPlan, r, c)) {
-        changes++;
-        return occupied;
-      }
-      return seatState;
-    })
-  );
+    let changes = 0;
+    const newSeatingPlan = seatingPlan.map((row, r) =>
+        row.map((seatState, c) => {
+            if (
+                seatState === free &&
+                !areAdjacentSeatsBusy(seatingPlan, r, c)
+            ) {
+                changes++;
+                return occupied;
+            }
+            return seatState;
+        })
+    );
 
-  return [changes, newSeatingPlan];
+    return [changes, newSeatingPlan];
 };
 
 const countOccupiedSeats = (seatingPlan: SeatingPlan) =>
-  seatingPlan.reduce<number>(
-    (prev, row) =>
-      (prev += row.filter((seatState) => seatState === occupied).length),
-    0
-  );
+    seatingPlan.reduce<number>(
+        (prev, row) =>
+            (prev += row.filter((seatState) => seatState === occupied).length),
+        0
+    );
 
 let seatingPlan = initialSeats,
-  changes = 0;
+    changes = 1;
 
-while (true) {
-  //   logSeats(seatingPlan);
-  [changes, seatingPlan] = changeYourMind(seatingPlan);
-  if (changes === 0) break;
-  //   logSeats(seatingPlan);
-  [changes, seatingPlan] = occupySeats(seatingPlan);
-  if (changes === 0) break;
+while (changes !== 0) {
+    //   logSeats(seatingPlan);
+    [changes, seatingPlan] = changeYourMind(seatingPlan);
+    if (changes === 0) break;
+    //   logSeats(seatingPlan);
+    [changes, seatingPlan] = occupySeats(seatingPlan);
 }
 
 console.log(countOccupiedSeats(seatingPlan));

@@ -53,35 +53,34 @@ const data = fs.readFileSync('./08.txt', 'utf-8');
 type Op = 'nop' | 'acc' | 'jmp';
 
 const parseOp = (line: string): [Op, number] => {
-  const [op, value] = line.split(' ') as [Op, string];
-  return [op, parseInt(value)];
+    const [op, value] = line.split(' ') as [Op, string];
+    return [op, parseInt(value)];
 };
 const ops = data.split('\n');
 const executed: number[] = [];
 
 let pointer = 0;
 let acc = 0;
-let order = 0;
+
 for (pointer = 0; pointer < ops.length; ) {
-  if (executed[pointer] !== undefined) {
-    console.log(acc);
-    break;
-  }
-  executed[pointer] = pointer;
+    if (executed[pointer] !== undefined) {
+        console.log(acc);
+        break;
+    }
+    executed[pointer] = pointer;
 
-  const [op, value] = parseOp(ops[pointer]);
-  //   console.log(`${op}\t${value}\t| ${++order} | acc: ${acc}`);
+    const [op, value] = parseOp(ops[pointer]);
 
-  switch (op) {
-    case 'acc':
-      acc += value;
-      pointer++;
-      break;
-    case 'jmp':
-      pointer += value;
-      break;
-    case 'nop':
-      pointer++;
-      break;
-  }
+    switch (op) {
+        case 'acc':
+            acc += value;
+            pointer++;
+            break;
+        case 'jmp':
+            pointer += value;
+            break;
+        case 'nop':
+            pointer++;
+            break;
+    }
 }
