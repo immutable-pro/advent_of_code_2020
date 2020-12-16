@@ -57,13 +57,13 @@ const validate = (info: string) => required.test(info);
 
 let passportInfo = '';
 const result = lines.reduce<number>((count: number, line: string) => {
-  if (line === '') {
-    count += validate(passportInfo.trim()) ? 1 : 0;
-    passportInfo = '';
-  } else {
-    passportInfo = `${passportInfo} ${line}`;
-  }
-  return count;
+    if (line === '') {
+        count += validate(passportInfo.trim()) ? 1 : 0;
+        passportInfo = '';
+    } else {
+        passportInfo = `${passportInfo} ${line}`;
+    }
+    return count;
 }, 0);
 
 console.log(result);

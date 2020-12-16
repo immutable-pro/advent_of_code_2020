@@ -42,35 +42,35 @@ const data = fs.readFileSync('./06.txt', 'utf-8');
 const lines = data.split('\n');
 
 const countYes = (group: string[]) => {
-  const answers = group.reduce<Map<string, number>>((prevAnswers, answer) => {
-    answer.split('').forEach((letter) => {
-      const count = prevAnswers.get(letter);
-      if (count !== undefined) {
-        prevAnswers.set(letter, count + 1);
-      } else {
-        prevAnswers.set(letter, 1);
-      }
+    const answers = group.reduce<Map<string, number>>((prevAnswers, answer) => {
+        answer.split('').forEach((letter) => {
+            const count = prevAnswers.get(letter);
+            if (count !== undefined) {
+                prevAnswers.set(letter, count + 1);
+            } else {
+                prevAnswers.set(letter, 1);
+            }
+        });
+        return prevAnswers;
+    }, new Map<string, number>());
+
+    let count = 0;
+    answers.forEach((value) => {
+        count += value === group.length ? 1 : 0;
     });
-    return prevAnswers;
-  }, new Map<string, number>());
 
-  let count = 0;
-  answers.forEach((value) => {
-    count += value === group.length ? 1 : 0;
-  });
-
-  return count;
+    return count;
 };
 
 let group: string[] = [];
 const result = lines.reduce<number>((count, line) => {
-  if (line === '') {
-    count += countYes(group);
-    group = [];
-  } else {
-    group.push(line);
-  }
-  return count;
+    if (line === '') {
+        count += countYes(group);
+        group = [];
+    } else {
+        group.push(line);
+    }
+    return count;
 }, 0);
 
 console.log(result);

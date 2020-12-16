@@ -41,50 +41,52 @@ const target = 'shiny gold';
 const graph = new Map<string, Set<string>>();
 
 data.split('\n').forEach((line) => {
-  const [container, contained] = line
-    .replace(/,|\.|bag(s)?[\s,\.]\s?/g, '')
-    .split('contain');
+    const [container, contained] = line
+        .replace(/,|\.|bag(s)?[\s,.]\s?/g, '')
+        .split('contain');
 
-  const containedBags = new Set<string>();
-  let bag: string = '';
-  contained
-    .trim()
-    .split(' ')
-    .forEach((token) => {
-      if (isNaN(parseInt(token))) {
-        bag = `${bag} ${token}`;
-      } else {
-        if (bag !== '') {
-          containedBags.add(bag.trim());
-        }
-        bag = '';
-      }
-    });
+    const containedBags = new Set<string>();
+    let bag = '';
+    contained
+        .trim()
+        .split(' ')
+        .forEach((token) => {
+            if (isNaN(parseInt(token))) {
+                bag = `${bag} ${token}`;
+            } else {
+                if (bag !== '') {
+                    containedBags.add(bag.trim());
+                }
+                bag = '';
+            }
+        });
 
-  containedBags.add(bag.trim());
+    containedBags.add(bag.trim());
 
-  graph.set(container.trim(), containedBags);
+    graph.set(container.trim(), containedBags);
 });
 
 const findDirectContainers = (bag: string) => {
-  const directContainers: string[] = [];
-  for (let [container, bags] of graph.entries()) {
-    if (bags.has(bag)) {
-      directContainers.push(container);
+    const directContainers: string[] = [];
+    for (const [container, bags] of graph.entries()) {
+        if (bags.has(bag)) {
+            directContainers.push(container);
+        }
     }
-  }
-  return directContainers;
+    return directContainers;
 };
 
 const stack: string[] = [...findDirectContainers(target)];
 const visited = new Set<string>();
 
 while (stack.length) {
-  const bag = stack.pop();
-  visited.add(bag!);
-  stack.push(
-    ...findDirectContainers(bag!).filter((container) => !visited.has(container))
-  );
+    const bag = stack.pop() ?? '';
+    visited.add(bag);
+    stack.push(
+        ...findDirectContainers(bag).filter(
+            (container) => !visited.has(container)
+        )
+    );
 }
 
 console.log(visited.size); // 337

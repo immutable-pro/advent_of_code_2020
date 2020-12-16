@@ -50,25 +50,25 @@ const data = fs.readFileSync('./06.txt', 'utf-8');
 const lines = data.split('\n');
 
 const countYes = (group: string[]) => {
-  const answers = group.reduce<Set<string>>((prevAnswers, answer) => {
-    answer.split('').forEach((letter) => {
-      prevAnswers.add(letter);
-    });
-    return prevAnswers;
-  }, new Set<string>());
+    const answers = group.reduce<Set<string>>((prevAnswers, answer) => {
+        answer.split('').forEach((letter) => {
+            prevAnswers.add(letter);
+        });
+        return prevAnswers;
+    }, new Set<string>());
 
-  return answers.size;
+    return answers.size;
 };
 
 let group: string[] = [];
 const result = lines.reduce<number>((count, line) => {
-  if (line === '') {
-    count += countYes(group);
-    group = [];
-  } else {
-    group.push(line);
-  }
-  return count;
+    if (line === '') {
+        count += countYes(group);
+        group = [];
+    } else {
+        group.push(line);
+    }
+    return count;
 }, 0);
 
 console.log(result);

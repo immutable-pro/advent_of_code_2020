@@ -26,12 +26,12 @@ import fs from 'fs';
 const data = fs.readFileSync('./02.txt', 'utf-8');
 
 const reducer = (prev: number, line: string) => {
-  const [minMax, letterColon, string] = line.split(' ');
-  const [min, max] = minMax.split('-');
-  const [letter] = letterColon.split(':');
+    const [minMax, letterColon, string] = line.split(' ');
+    const [min, max] = minMax.split('-');
+    const [letter] = letterColon.split(':');
 
-  const reps = (string.match(new RegExp(letter, 'g')) || []).length;
-  return parseInt(min) <= reps && reps <= parseInt(max) ? ++prev : prev;
+    const reps = (string.match(new RegExp(letter, 'g')) || []).length;
+    return parseInt(min) <= reps && reps <= parseInt(max) ? ++prev : prev;
 };
 
 console.log(data.split('\n').reduce(reducer, 0));

@@ -4,25 +4,25 @@
  In your expense report, what is the product of the three entries that sum to 2020?
 */
 
-const fs = require('fs');
+import fs from 'fs';
 const data = fs.readFileSync('./01.txt', 'utf-8');
 
 const numbers = new Set<number>();
 
 let result = -1;
 data.split('\n').findIndex((entry: string) => {
-  const number = parseInt(entry);
-  numbers.add(number);
+    const number = parseInt(entry);
+    numbers.add(number);
 
-  for (let n of numbers) {
-    const complement = 2020 - (n + number);
-    if (complement > 0 && numbers.has(complement)) {
-      result = complement * n * number;
-      return true;
+    for (const n of numbers) {
+        const complement = 2020 - (n + number);
+        if (complement > 0 && numbers.has(complement)) {
+            result = complement * n * number;
+            return true;
+        }
     }
-  }
 
-  return false;
+    return false;
 });
 
 console.log(result);

@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /*
 --- Part Two ---
 
@@ -76,68 +77,68 @@ const lines = data.split('\n');
 
 type Field = 'byr' | 'iyr' | 'eyr' | 'hgt' | 'hcl' | 'ecl' | 'pid';
 const additionalVerificationFields = new Set<Field>([
-  'byr',
-  'iyr',
-  'eyr',
-  'hgt',
+    'byr',
+    'iyr',
+    'eyr',
+    'hgt',
 ]);
 
 const required = /(?=.*byr:)(?=.*iyr:)(?=.*eyr:)(?=.*hgt:[0-9]{2,3}(cm|in)\b)(?=.*hcl:#[0-9a-f]{6}\b)(?=.*ecl:(amb|blu|brn|gry|grn|hzl|oth)\b)(?=.*pid:[0-9]{9}\b)/;
 
 const numberFitsRange = (value: string, min: number, max: number) => {
-  const number = Number(value);
-  return !isNaN(number) && min <= number && number <= max;
+    const number = Number(value);
+    return !isNaN(number) && min <= number && number <= max;
 };
 
 const isValid = (info: string): boolean => {
-  const info1 = info.trim();
-  if (!required.test(info1)) return false;
+    const info1 = info.trim();
+    if (!required.test(info1)) return false;
 
-  const fields = info1.split(' ');
-  const map = fields.reduce<Record<string, string>>((m, field) => {
-    const [key, value] = field.split(':');
-    if (additionalVerificationFields.has(key as Field)) {
-      m[key] = value;
+    const fields = info1.split(' ');
+    const map = fields.reduce<Record<string, string>>((m, field) => {
+        const [key, value] = field.split(':');
+        if (additionalVerificationFields.has(key as Field)) {
+            m[key] = value;
+        }
+        return m;
+    }, {});
+
+    // All fields not verified in the regex are valid
+    for (const field of additionalVerificationFields) {
+        const value = map[field] ?? 0;
+        switch (field) {
+            case 'byr':
+                if (!numberFitsRange(value, 1920, 2002)) return false;
+                break;
+            case 'eyr':
+                if (!numberFitsRange(value, 2020, 2030)) return false;
+                break;
+            case 'hgt':
+                const match = /^([0-9]{2,3})(cm|in)$/.exec(value);
+                const [, heightStr, metric] = match ?? [];
+                if (metric === 'cm' && !numberFitsRange(heightStr, 150, 193))
+                    return false;
+                if (metric === 'in' && !numberFitsRange(heightStr, 59, 76))
+                    return false;
+                break;
+            case 'iyr':
+                if (!numberFitsRange(value, 2010, 2020)) return false;
+                break;
+        }
     }
-    return m;
-  }, {});
 
-  // All fields not verified in the regex are valid
-  for (let field of additionalVerificationFields) {
-    const value = map[field];
-    switch (field) {
-      case 'byr':
-        if (!numberFitsRange(value!, 1920, 2002)) return false;
-        break;
-      case 'eyr':
-        if (!numberFitsRange(value!, 2020, 2030)) return false;
-        break;
-      case 'hgt':
-        const match = /^([0-9]{2,3})(cm|in)$/.exec(value!);
-        const [, heightStr, metric] = match!;
-        if (metric === 'cm' && !numberFitsRange(heightStr, 150, 193))
-          return false;
-        if (metric === 'in' && !numberFitsRange(heightStr, 59, 76))
-          return false;
-        break;
-      case 'iyr':
-        if (!numberFitsRange(value!, 2010, 2020)) return false;
-        break;
-    }
-  }
-
-  return true;
+    return true;
 };
 
 let passportInfo = '';
 const result = lines.reduce<number>((count, line) => {
-  if (line === '') {
-    count += isValid(passportInfo) ? 1 : 0;
-    passportInfo = '';
-  } else {
-    passportInfo = `${passportInfo} ${line}`;
-  }
-  return count;
+    if (line === '') {
+        count += isValid(passportInfo) ? 1 : 0;
+        passportInfo = '';
+    } else {
+        passportInfo = `${passportInfo} ${line}`;
+    }
+    return count;
 }, 0);
 
 console.log(result);

@@ -20,14 +20,14 @@ import fs from 'fs';
 const data = fs.readFileSync('./02.txt', 'utf-8');
 
 const reducer = (prev: number, line: string) => {
-  const [minMax, letterColon, string] = line.split(' ');
-  const [min, max] = minMax.split('-').map(parseInt);
-  const [letter] = letterColon.split(':');
+    const [minMax, letterColon, string] = line.split(' ');
+    const [min, max] = minMax.split('-').map(parseInt);
+    const [letter] = letterColon.split(':');
 
-  return (string[min - 1] === letter && string[max - 1] !== letter) ||
+    return (string[min - 1] === letter && string[max - 1] !== letter) ||
     (string[min - 1] !== letter && string[max - 1] === letter)
-    ? ++prev
-    : prev;
+        ? ++prev
+        : prev;
 };
 
 console.log(data.split('\n').reduce(reducer, 0));

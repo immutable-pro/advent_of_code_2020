@@ -48,13 +48,13 @@ const data = fs.readFileSync('./05.txt', 'utf-8');
 const lines = data.split('\n');
 
 const getRow = (card: string) =>
-  parseInt(card.substr(0, 7).replace(/F/g, '0').replace(/B/g, '1'), 2);
+    parseInt(card.substr(0, 7).replace(/F/g, '0').replace(/B/g, '1'), 2);
 const getCol = (card: string) =>
-  parseInt(card.substr(7, 10).replace(/L/g, '0').replace(/R/g, '1'), 2);
+    parseInt(card.substr(7, 10).replace(/L/g, '0').replace(/R/g, '1'), 2);
 
 const highestSeatId = lines.reduce<number>((max, line) => {
-  const id = getRow(line) * 8 + getCol(line);
-  return id > max ? id : max;
+    const id = getRow(line) * 8 + getCol(line);
+    return id > max ? id : max;
 }, 0);
 
 console.log(highestSeatId);

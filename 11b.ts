@@ -126,138 +126,124 @@ const free = 0;
 const occupied = 1;
 
 const initialSeats: SeatingPlan = data
-  .split('\n')
-  .map((row) => row.split('').map((seat) => (seat === '.' ? floor : occupied)));
+    .split('\n')
+    .map((row) =>
+        row.split('').map((seat) => (seat === '.' ? floor : occupied))
+    );
 
 const directions = Object.freeze([
-  [-1, -1],
-  [-1, 0],
-  [-1, 1],
-  [0, -1],
-  [0, 1],
-  [1, -1],
-  [1, 0],
-  [1, 1],
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, -1],
+    [0, 1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
 ]);
 
-const logSeats = (seatingPlan: SeatingPlan) => {
-  seatingPlan.forEach((row) =>
-    console.log(
-      row.reduce<string>((prev, state) => {
-        switch (state) {
-          case occupied:
-            return `${prev}#`;
-          case free:
-            return `${prev}L`;
-          case floor:
-            return `${prev}.`;
-        }
-      }, '')
-    )
-  );
-  console.log('==================');
-};
-
 const changeYourMind = (seatingPlan: SeatingPlan): [number, SeatingPlan] => {
-  let changes = 0;
-  const newSeatingPlan = seatingPlan.map((row, r) =>
-    row.map((seatState, c) => {
-      if (seatState === occupied && !canISee5occupiedSeats(seatingPlan, r, c)) {
-        changes++;
-        return free;
-      }
-      return seatState;
-    })
-  );
+    let changes = 0;
+    const newSeatingPlan = seatingPlan.map((row, r) =>
+        row.map((seatState, c) => {
+            if (
+                seatState === occupied &&
+                !canISee5occupiedSeats(seatingPlan, r, c)
+            ) {
+                changes++;
+                return free;
+            }
+            return seatState;
+        })
+    );
 
-  return [changes, newSeatingPlan];
+    return [changes, newSeatingPlan];
 };
 
 const canISee5occupiedSeats = (
-  seatingPlan: SeatingPlan,
-  r: number,
-  c: number
+    seatingPlan: SeatingPlan,
+    r: number,
+    c: number
 ) => {
-  let count = 5;
-  for (const [stepX, stepY] of directions) {
-    let x = stepX;
-    let y = stepY;
-    while (seatingPlan[r + x] && seatingPlan[r + x][c + y] !== undefined) {
-      const seatState = seatingPlan[r + x][c + y];
-      x += stepX;
-      y += stepY;
+    let count = 5;
+    for (const [stepX, stepY] of directions) {
+        let x = stepX;
+        let y = stepY;
+        while (seatingPlan[r + x] && seatingPlan[r + x][c + y] !== undefined) {
+            const seatState = seatingPlan[r + x][c + y];
+            x += stepX;
+            y += stepY;
 
-      if (seatState === free) {
-        break;
-      } else if (seatState === floor) {
-        continue;
-      } else if (seatState === occupied) {
-        count--;
-        if (count === 0) return;
-        break;
-      }
+            if (seatState === free) {
+                break;
+            } else if (seatState === floor) {
+                continue;
+            } else if (seatState === occupied) {
+                count--;
+                if (count === 0) return;
+                break;
+            }
+        }
     }
-  }
 
-  return count > 0;
+    return count > 0;
 };
 
 const canISee8SeatsFree = (seatingPlan: SeatingPlan, r: number, c: number) => {
-  for (const [stepX, stepY] of directions) {
-    let x = stepX;
-    let y = stepY;
-    while (seatingPlan[r + x] && seatingPlan[r + x][c + y] !== undefined) {
-      const seatState = seatingPlan[r + x][c + y];
-      x += stepX;
-      y += stepY;
+    for (const [stepX, stepY] of directions) {
+        let x = stepX;
+        let y = stepY;
+        while (seatingPlan[r + x] && seatingPlan[r + x][c + y] !== undefined) {
+            const seatState = seatingPlan[r + x][c + y];
+            x += stepX;
+            y += stepY;
 
-      if (seatState === free) {
-        break;
-      } else if (seatState === floor) {
-        continue;
-      } else if (seatState === occupied) {
-        return false;
-      }
+            if (seatState === free) {
+                break;
+            } else if (seatState === floor) {
+                continue;
+            } else if (seatState === occupied) {
+                return false;
+            }
+        }
     }
-  }
 
-  return true;
+    return true;
 };
 
 const occupySeats = (seatingPlan: SeatingPlan): [number, SeatingPlan] => {
-  let changes = 0;
-  const newSeatingPlan = seatingPlan.map((row, r) =>
-    row.map((seatState, c) => {
-      if (seatState === free && canISee8SeatsFree(seatingPlan, r, c)) {
-        changes++;
-        return occupied;
-      }
-      return seatState;
-    })
-  );
+    let changes = 0;
+    const newSeatingPlan = seatingPlan.map((row, r) =>
+        row.map((seatState, c) => {
+            if (seatState === free && canISee8SeatsFree(seatingPlan, r, c)) {
+                changes++;
+                return occupied;
+            }
+            return seatState;
+        })
+    );
 
-  return [changes, newSeatingPlan];
+    return [changes, newSeatingPlan];
 };
 
 let seatingPlan = initialSeats,
-  changes = 0;
+    changes = 1;
 
-while (true) {
-  //   console.log('occupySeats');
-  //   logSeats(seatingPlan);
-  [changes, seatingPlan] = changeYourMind(seatingPlan);
-  if (changes === 0) break;
-  //   console.log('changeYourMind');
-  //   logSeats(seatingPlan);
-  [changes, seatingPlan] = occupySeats(seatingPlan);
-  if (changes === 0) break;
+while (changes !== 0) {
+    //   console.log('occupySeats');
+    //   logSeats(seatingPlan);
+    [changes, seatingPlan] = changeYourMind(seatingPlan);
+    if (changes === 0) break;
+    //   console.log('changeYourMind');
+    //   logSeats(seatingPlan);
+    [changes, seatingPlan] = occupySeats(seatingPlan);
 }
 
 const countOccupiedSeats = (seatingPlan: SeatingPlan) =>
-  seatingPlan.reduce<number>(
-    (prev, row) =>
-      (prev += row.filter((seatState) => seatState === occupied).length),
-    0
-  );
+    seatingPlan.reduce<number>(
+        (prev, row) =>
+            (prev += row.filter((seatState) => seatState === occupied).length),
+        0
+    );
 
 console.log(countOccupiedSeats(seatingPlan));
