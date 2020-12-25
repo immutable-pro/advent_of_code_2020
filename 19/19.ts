@@ -69,10 +69,6 @@ while (DATA[i] !== '') {
 const substitutionToRegex = (substitution?: string): string => {
     if (!substitution) throw new Error(`Invalid substitution received: ${substitutionToRegex}`);
 
-    if (/^["ab()|]+$/.test(substitution)) {
-        return substitution;
-    }
-
     let regex = '';
     substitution.split(' ').forEach((token) => {
         if (token === '(' || token === ')' || token === '|') {
