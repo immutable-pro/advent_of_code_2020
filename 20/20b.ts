@@ -277,37 +277,24 @@ board.lines = board.lines.map((line) =>
     }, '')
 );
 
-// const monster = [
-//     '                  # ',
-//     '#    ##    ##    ###',
-//     ' #  #  #  #  #  #   '
-// ];
-
-const monsterSequence = [
-    [0, 0],
-    [1, 1],
-    [1, 0],
-    [1, -1],
-    [1, -6],
-    [1, -7],
-    [1, -12],
-    [1, -13],
-    [1, -18],
-    [2, -2],
-    [2, -5],
-    [2, -8],
-    [2, -11],
-    [2, -14],
-    [2, -17],
-];
+const monster = ['                  # ', '#    ##    ##    ###', ' #  #  #  #  #  #   '];
+let monsterSequence = monster.reduce<number[][]>((prev, line, i) => {
+    line.split('').forEach((char, j) => {
+        if (char === '#') {
+            prev.push([i, j]);
+        }
+    });
+    return prev;
+}, []);
+// Normalizing
+monsterSequence = monsterSequence.map(([x, y]) => [x - monsterSequence[0][0], y - monsterSequence[0][1]]);
 
 // Scanning and marking sea monsters
 const scan = () => {
     let found = false;
-    for (let i = 0; i < board.lines.length; i++) {
-        const line = board.lines[i];
-        for (let j = 0; j < board.lines.length; j++) {
-            if (line.charAt(j) === '#') {
+    board.lines.forEach((line, i) => {
+        line.split('').forEach((char, j) => {
+            if (char === '#') {
                 const lastVisit: { i: number; j: number }[] = [];
                 for (let m = 0; m < monsterSequence.length; m++) {
                     const [x, y] = monsterSequence[m];
@@ -326,8 +313,9 @@ const scan = () => {
                     });
                 }
             }
-        }
-    }
+        });
+    });
+
     return found;
 };
 
