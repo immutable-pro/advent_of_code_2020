@@ -207,34 +207,6 @@ const calculateBorderTransformations = (lines: string[]): string[][] => {
     const left270 = bottom180;
     transformations.push([top270, right270, bottom270, left270]);
 
-    // Flip
-    const topA = bottom180;
-    const rightA = left;
-    const bottomA = top180;
-    const leftA = right;
-    transformations.push([topA, rightA, bottomA, leftA]);
-
-    // Flip + 90
-    const topB = bottom90;
-    const rightB = bottom180;
-    const bottomB = top90;
-    const leftB = top180;
-    transformations.push([topB, rightB, bottomB, leftB]);
-
-    // Flip + 180
-    const topC = bottom;
-    const rightC = bottom90;
-    const bottomC = top;
-    const leftC = top90;
-    transformations.push([topC, rightC, bottomC, leftC]);
-
-    // Flip + 270
-    const topD = bottom270;
-    const rightD = bottom;
-    const bottomD = top270;
-    const leftD = top;
-    transformations.push([topD, rightD, bottomD, leftD]);
-
     return transformations;
 };
 
@@ -256,31 +228,30 @@ for (const line of input) {
 const corners = new Set<string>();
 const tilesArray = [...tiles.entries()];
 tilesArray.forEach(([title, { transformations }]) => {
-    transformations.forEach((borders) => {
-        let count = 0;
-        borders.forEach((border) => {
-            // Find border in other tiles
-            tilesArray
-                .filter(([t]) => t !== title)
-                .forEach(([, otherTile]) => {
-                    const otherTransformations = otherTile.transformations;
-                    otherTransformations.forEach((otherBorders) => {
-                        otherBorders.forEach((otherBorder) => {
-                            if (border === otherBorder) {
-                                count++;
-                            }
-                        });
+    let count = 0;
+    transformations[0].forEach((border) => {
+        // Find border in other tiles
+        tilesArray
+            .filter(([t]) => t !== title)
+            .forEach(([, otherTile]) => {
+                const otherTransformations = otherTile.transformations;
+                otherTransformations.forEach((otherBorders) => {
+                    otherBorders.forEach((otherBorder) => {
+                        if (border === otherBorder) {
+                            count++;
+                        }
                     });
                 });
-        });
-        if (count === 8) {
-            corners.add(title);
-        }
+            });
     });
+    if (count === 4) {
+        corners.add(title);
+    }
 });
 
 let result = 1;
 for (const title of corners) {
     result *= parseInt(title.substring(5, 10));
 }
+console.log(corners);
 console.log(result);
