@@ -331,6 +331,7 @@ const game = (player1: number[], player2: number[], gameNum: number, round: numb
         // console.log(`Player ${winner} wins round ${round++} of game ${gameNum}!`);
     }
 
+    previousRoundsHashes.delete(gameNum);
     if (player1.length === 0) {
         // console.log(`The winner of game ${gameNum} is player 2!`);
         return 2;
@@ -338,12 +339,13 @@ const game = (player1: number[], player2: number[], gameNum: number, round: numb
         // console.log(`The winner of game ${gameNum} is player 1!`);
         return 1;
     }
-    previousRoundsHashes.delete(gameNum);
 
     throw 'This is not possible';
 };
 
 game(player1Cards, player2Cards, 1, 1);
+
+console.log(`Previous rounds hashes length: ${previousRoundsHashes.size}`);
 
 const winner = player1Cards.length > player2Cards.length ? player1Cards : player2Cards;
 const score = winner.reduce((sum, card, i) => {
