@@ -291,13 +291,10 @@ input.forEach((line) => {
 const previousRoundsHashes = new Map<number, Set<string>>();
 
 let lastGameNumber = 1;
-const game = (player1: number[], player2: number[], gameNum: number, round: number): 1 | 2 => {
+const game = (player1: number[], player2: number[], gameNum: number): 1 | 2 => {
     const totalCards = player1.length + player2.length;
 
     while (player1.length !== totalCards && player2.length !== totalCards) {
-        // console.log(`\n-- Round ${round} (Game ${gameNum}) --`);
-        // console.log(`Player 1's deck: ${player1.join(', ')}`);
-        // console.log(`Player 2's deck: ${player2.join(', ')}`);
         const roundHash = hash({ player1, player2 });
         if (previousRoundsHashes.get(gameNum)?.has(roundHash)) {
             previousRoundsHashes.delete(gameNum);
@@ -310,13 +307,10 @@ const game = (player1: number[], player2: number[], gameNum: number, round: numb
 
         const card1 = player1.shift() || 0;
         const card2 = player2.shift() || 0;
-        // console.log(`Player 1 plays: ${card1}`);
-        // console.log(`Player 2 plays: ${card2}`);
 
         let winner: 1 | 2;
         if (player1.length >= card1 && player2.length >= card2) {
-            // console.log('Playing a sub-game to determine the winner...');
-            winner = game(player1.slice(0, card1), player2.slice(0, card2), ++lastGameNumber, 1); // New sub-game
+            winner = game(player1.slice(0, card1), player2.slice(0, card2), ++lastGameNumber); // New sub-game
         } else {
             winner = card1 > card2 ? 1 : 2;
         }
@@ -328,28 +322,17 @@ const game = (player1: number[], player2: number[], gameNum: number, round: numb
             player2.push(card2);
             player2.push(card1);
         }
-        // console.log(`Player ${winner} wins round ${round++} of game ${gameNum}!`);
     }
 
     previousRoundsHashes.delete(gameNum);
-    if (player1.length === 0) {
-        // console.log(`The winner of game ${gameNum} is player 2!`);
-        return 2;
-    } else if (player2.length === 0) {
-        // console.log(`The winner of game ${gameNum} is player 1!`);
-        return 1;
-    }
-
-    throw 'This is not possible';
+    return player1.length === 0 ? 2 : 1;
 };
 
-game(player1Cards, player2Cards, 1, 1);
+const winner = game(player1Cards, player2Cards, lastGameNumber);
 
-console.log(`Previous rounds hashes length: ${previousRoundsHashes.size}`);
-
-const winner = player1Cards.length > player2Cards.length ? player1Cards : player2Cards;
-const score = winner.reduce((sum, card, i) => {
-    sum += card * (winner.length - i);
+const winnerCards = winner === 1 ? player1Cards : player2Cards;
+const score = winnerCards.reduce((sum, card, i) => {
+    sum += card * (winnerCards.length - i);
     return sum;
 }, 0);
 
