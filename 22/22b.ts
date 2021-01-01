@@ -300,7 +300,7 @@ const game = (player1: number[], player2: number[], gameNum: number, round: numb
         // console.log(`Player 2's deck: ${player2.join(', ')}`);
         const roundHash = hash({ player1, player2 });
         if (previousRoundsHashes.get(gameNum)?.has(roundHash)) {
-            // console.log('.');
+            previousRoundsHashes.delete(gameNum);
             return 1;
         } else {
             const hashes = previousRoundsHashes.get(gameNum) ?? new Set<string>();
