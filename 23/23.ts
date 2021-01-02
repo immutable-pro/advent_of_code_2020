@@ -131,7 +131,7 @@ export const findDestinationCup = (curCup: Cup, numCups: number, cupPointers: Cu
     return cupPointers[destCupLabel];
 };
 
-const logCups = (cup: Cup): void => {
+export const logCups = (cup: Cup): void => {
     const start = cup;
     let next = cup.sig!;
     const array = [start.label];
