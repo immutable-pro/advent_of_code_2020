@@ -163,12 +163,9 @@ export const crabMoveCups = (currentCup: Cup, times: number, numCups: number, cu
     return currentCup;
 };
 
-const getCupsAfter1 = (curCup: Cup) => {
+const getCupsAfter1 = (cupPointers: Cup[]) => {
+    const cup1 = cupPointers[1];
     const array = [];
-    let cup1 = curCup;
-    while (cup1.label !== 1) {
-        cup1 = cup1.sig!;
-    }
     let next = cup1.sig!;
     while (next.label !== 1) {
         array.push(next.label);
@@ -178,5 +175,5 @@ const getCupsAfter1 = (curCup: Cup) => {
 };
 const cupsList = createCupsList(cups);
 const cupPointers = createCupPointers(cupsList);
-const currentCup = crabMoveCups(cupsList, 100, cups.length, cupPointers);
-console.log(`First part: ${getCupsAfter1(currentCup)}`);
+crabMoveCups(cupsList, 100, cups.length, cupPointers);
+console.log(`First part: ${getCupsAfter1(cupPointers)}`);

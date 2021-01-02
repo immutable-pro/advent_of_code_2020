@@ -46,19 +46,11 @@ const createCupsList = (cups: number[]): Cup => {
     return first;
 };
 
-const findCup1 = (startCup: Cup): Cup => {
-    let next = startCup;
-    while (next.label !== 1) {
-        next = next.sig!;
-    }
-    return next;
-};
-
-const hrstart = process.hrtime();
 const cupsList = createCupsList(cups);
 const cupPointers = createCupPointers(cupsList);
-const cup = crabMoveCups(cupsList, 10000000, 1000000, cupPointers);
-const cup1 = findCup1(cup);
+const hrstart = process.hrtime();
+crabMoveCups(cupsList, 10000000, 1000000, cupPointers);
 const hrend = process.hrtime(hrstart);
+const cup1 = cupPointers[1];
 console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
 console.log(`Second part: ${cup1.sig!.label * cup1.sig!.sig!.label}`);
