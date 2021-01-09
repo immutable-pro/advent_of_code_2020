@@ -112,14 +112,15 @@ steps.forEach((jumps) => {
     }
 });
 
-Object.entries(lobby).forEach(([tileStr]) => {
+for (const tileStr in lobby) {
     addNeighbors(lobby, tileStr);
-});
+}
 
 for (let d = 0; d < 100; d++) {
     const newLobby: Record<string, boolean> = {};
 
-    Object.entries(lobby).forEach(([tileStr, color]) => {
+    for (const tileStr in lobby) {
+        const color = lobby[tileStr];
         const blackNeighbors = countBlackNeighbors(tileStr);
         if (!color && blackNeighbors === 2) {
             newLobby[tileStr] = true;
@@ -128,7 +129,7 @@ for (let d = 0; d < 100; d++) {
             newLobby[tileStr] = true;
             addNeighbors(newLobby, tileStr);
         }
-    });
+    }
     lobby = newLobby;
 }
 
